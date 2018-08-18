@@ -1,0 +1,4 @@
+*.pyc
+db.sqlite3
+roc_curve/local_settings.py
+.idea/
