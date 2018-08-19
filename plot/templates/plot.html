@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ROC Curve</title>
+</head>
+<body>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <h1>Построение ROC-Кривой</h1>
+    {% if ploted %}
+    {% else %}
+    <h2>Для построение ROC-Кривой, согласно, заданию загрузите два файла.</h2>
+    <form method="POST">
+        {% csrf_token %}
+      <div class="form-group">
+        <label for="features">features.npy</label>
+        <input type="file" class="form-control-file" id="features" name="features" aria-describedby="features_fileHelp" required>
+        <small id="features_fileHelp" class="form-text text-muted">Загрузите сюда набор векторов(features.npy).</small>
+      </div>
+      <div class="form-group">
+        <label for="person_id">person_id.npy</label>
+        <input type="file" class="form-control-file" id="person_id" name="person_id" aria-describedby="person_id_fileHelp" required>
+        <small id="person_id_fileHelp" class="form-text text-muted">Загрузите сюда набор из персон(person_id.npy).</small>
+      </div>
+      <button type="submit" class="btn btn-primary">Загрузить файлы</button>
+    </form>
+    {% endif %}
+</body>
+</html>
