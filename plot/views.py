@@ -23,16 +23,8 @@ class PlotViev(TemplateView):
         person_id = np.load(request.FILES['person_id'])
         feature_similarity, true_labels = get_total_similarity(features, person_id)
 
-
-        # actual code for roc + threshold charts start here
-        # compute fpr, tpr, thresholds and roc_auc
-        #print(len(feature_similarity), len(true_labels))
-        #print(feature_similarity, true_labels)
         fpr, tpr, thresholds = roc_curve(true_labels, feature_similarity)
-        #print(len(tpr), tpr)
-        #print(len(fpr), fpr)
-        #print(len(thresholds), thresholds)
-        roc_auc = auc(fpr, tpr)  # compute area under the curve
+        roc_auc = auc(fpr, tpr)
 
         plt.figure()
         plt.plot(fpr, tpr, label='ROC curve (area = %0.2f)' % (roc_auc))
@@ -44,7 +36,6 @@ class PlotViev(TemplateView):
         plt.title('Receiver operating characteristic')
         plt.legend(loc="lower right")
 
-        # create the axis of thresholds (scores)
         ax2 = plt.gca().twinx()
         ax2.plot(fpr, thresholds, markeredgecolor='r', linestyle='dashed', color='r')
         ax2.set_ylabel('Threshold', color='r')
@@ -62,7 +53,6 @@ class PlotViev(TemplateView):
 def get_total_similarity(features, person_id):
     list_similarity = []
     list_classify = []
-    confidence_values = []
     chunck = 0
 
 
@@ -78,9 +68,6 @@ def get_total_similarity(features, person_id):
                     T = similarity
 
         for sim in list_similarity[chunck:]:
-            confidence = sim/T
-            #print('similarity: {0} | T: {1} | Probabilty: {2}'.format(sim, T, confidence))
-            confidence_values.append(confidence)
             if sim >= T:
                 list_classify.append(1)
             else:
