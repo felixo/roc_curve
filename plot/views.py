@@ -4,8 +4,10 @@ import matplotlib as mpl
 mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 from django.views.generic import TemplateView
+from django.conf import settings
 
 
 
@@ -14,23 +16,20 @@ class PlotViev(TemplateView):
 
 
     def post(self, request, *args, **kwargs):
-        context = {}
-        features = request.FILES['features']
-        person_id = request.FILES['person_id']
-
-
-        #feature_similarity, true_labels = get_similarity(features, features[0], person_id[0], person_id)
+        context = self.get_context_data()
+        features = np.load(request.FILES['features'])
+        person_id = np.load(request.FILES['person_id'])
         feature_similarity, true_labels = get_total_similarity(features, person_id)
 
 
         # actual code for roc + threshold charts start here
         # compute fpr, tpr, thresholds and roc_auc
-        print(len(feature_similarity), len(true_labels))
-        print(feature_similarity, true_labels)
+        #print(len(feature_similarity), len(true_labels))
+        #print(feature_similarity, true_labels)
         fpr, tpr, thresholds = roc_curve(true_labels, feature_similarity)
-        print(len(tpr), tpr)
-        print(len(fpr), fpr)
-        print(len(thresholds), thresholds)
+        #print(len(tpr), tpr)
+        #print(len(fpr), fpr)
+        #print(len(thresholds), thresholds)
         roc_auc = auc(fpr, tpr)  # compute area under the curve
 
         plt.figure()
@@ -50,10 +49,12 @@ class PlotViev(TemplateView):
         ax2.set_ylim([thresholds[-1], thresholds[0]])
         ax2.set_xlim([fpr[0], fpr[-1]])
 
-        plt.savefig('roc_and_threshold_3.png')
+        plt.savefig(settings.MEDIA_ROOT+'roc_and_threshold_3.png')
         plt.close()
+        context['ploted'] = True
+        context['plot'] = settings.MEDIA_URL+'roc_and_threshold_3.png'
 
-        return render(request, 'plot.html', {'context': context})
+        return render(request, 'plot.html', context)
 
 
 def get_total_similarity(features, person_id):
