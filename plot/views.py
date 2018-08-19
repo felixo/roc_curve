@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from sklearn.metrics import roc_curve, auc
 import matplotlib as mpl
-mpl.use('TkAgg')
+# -- Использовать для макоси
+#mpl.use('TkAgg')
+mpl.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import os
